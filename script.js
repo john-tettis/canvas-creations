@@ -21,7 +21,6 @@ canvas.addEventListener('mousemove',(e)=>{
     //     particles.push(new Particle())
 
     // }
-    hue++;
 })
 // canvas.addEventListener('click',()=>{
 //     console.log('click')
@@ -45,21 +44,24 @@ class Firing{
         this.start= {x:null,y:null}
     }
     update(){
+        this.start={x:player.x,y:player.y}
         let {x,y} = this.start;
         if(!x || !y) return
         if(this.end){
            this.handleFire() 
         }
         else{
+            
             ctx.beginPath()
             ctx.moveTo(x,y)
             ctx.strokeStyle =`hsl(${hue},100%,50%)`
+            ctx.lineWidth=5;
             ctx.lineTo(mouse.x,mouse.y)
             ctx.stroke()
         }
     }
     handleFire(){
-        let speed = -10;
+        let speed = 10;
         let dx = this.end.x-this.start.x;
         let dy = this.end.y-this.start.y;
         let ratio = Math.abs(dy/dx);
@@ -77,12 +79,7 @@ class Firing{
 
 let fireContext = new Firing()
 //add x,y values to fire context on mousedown
-
-canvas.addEventListener('mousedown',(e)=>{
-    fireContext.start= {x:mouse.x,y:mouse.y}
-    
-})
-canvas.addEventListener('mouseup',()=>{
+canvas.addEventListener('click',()=>{
     fireContext.end = {x:mouse.x,y:mouse.y};
 
 })
@@ -173,6 +170,71 @@ class ParticleSystem{
     }
 }
 
+
+
+class Player{
+    constructor(x,y,hue,size=50){
+        this.x=x;
+        this.y=y;
+        this.dx=0;
+        this.dy=0;
+        this.size=size,
+        this.hue=hue;
+        this.ddy=0;
+        this.ddx=0;
+        this.update();
+        
+    }
+    update(){
+        this.x+=this.dx;
+        this.y+=this.dy;
+        this.dy+= this.ddy;
+        this.dx+=this.ddx;
+        if(this.dx >-1 && this.dx <1)this.ddx=0;
+        if(this.dy >-1 && this.dy <1)this.ddy=0;
+        this.draw();
+    }
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle=`hsl(${hue},100%,50%)`;
+        ctx.arc(this.x,this.y, this.size, 0, Math.PI *2)
+        ctx.fill();
+    }
+    increment(code,speed=6,ddy){
+        console.log(code)
+        switch(code){
+            case 'KeyW':
+                // this.dy-=speed;
+                this.dy = this.dy < -10 ? -10:this.dy;
+                this.ddy=ddy
+                break
+            case 'KeyA':
+                // this.dx-=speed;
+                this.dx = this.dx < -10 ? -10:this.dx;
+                this.ddx=ddy
+                break
+            case 'KeyS':
+                // this.dy+=speed;
+                this.dy = this.dy> 10 ? 10:this.dy;
+                this.ddy=-ddy
+                break
+            case 'KeyD':
+                // this.dx+=speed;
+                this.dx = this.dx> 10 ? 10:this.dx;
+                this.ddx=-ddy;
+                break
+            case 'Space':
+        }
+    }
+}
+let player = new Player(80,80,327);
+window.addEventListener('keydown',(e)=>{
+    player.increment(e.code,0,-.5)
+})
+window.addEventListener('keyup',(e)=>{
+    player.increment(e.code,10,.5)
+})
+
 function animate2(){
     particleSystemHandler();
     window.requestAnimationFrame(animate)
@@ -185,8 +247,9 @@ function animate(){
     ctx.fill()
     particleSystemHandler();
     fireContext.update()
-    
-    window.requestAnimationFrame(animate2)
+    player.update();
+    hue++;
+    window.requestAnimationFrame(animate)
 
 }
 animate();
