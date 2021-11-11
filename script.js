@@ -186,12 +186,24 @@ class Player{
         
     }
     update(){
-        this.x+=this.dx;
-        this.y+=this.dy;
+        // if(this.x < canvas.width - this.size && this.x > this.size/2) this.x+=this.dx;
+        // else this.x += this.x > canvas.width ? -5:5;
+        // if(this.y < canvas.height - this.size && this.y > this.size/2)this.y+=this.dy;
+        // else this.y += this.y > canvas.height ? -5:5;
         this.dy+= this.ddy;
         this.dx+=this.ddx;
-        if(this.dx >-1 && this.dx <1)this.ddx=0;
-        if(this.dy >-1 && this.dy <1)this.ddy=0;
+        console.log(this.dx,this.dy)
+        //decelarration handler
+        if(this.dx >-1 && this.dx <1){
+            this.ddx=0; 
+            this.dx=0;
+        }
+        if(this.dy >-1 && this.dy <1){
+            this.ddy=0;
+            this.dy=0
+        }
+        //canvas bounds handler
+        
         this.draw();
     }
     draw(){
@@ -204,22 +216,22 @@ class Player{
         console.log(code)
         switch(code){
             case 'KeyW':
-                // this.dy-=speed;
+                this.dy=-speed;
                 this.dy = this.dy < -10 ? -10:this.dy;
                 this.ddy=ddy
                 break
             case 'KeyA':
-                // this.dx-=speed;
+                this.dx=-speed;
                 this.dx = this.dx < -10 ? -10:this.dx;
                 this.ddx=ddy
                 break
             case 'KeyS':
-                // this.dy+=speed;
+                this.dy=speed;
                 this.dy = this.dy> 10 ? 10:this.dy;
                 this.ddy=-ddy
                 break
             case 'KeyD':
-                // this.dx+=speed;
+                this.dx=speed;
                 this.dx = this.dx> 10 ? 10:this.dx;
                 this.ddx=-ddy;
                 break
@@ -229,10 +241,10 @@ class Player{
 }
 let player = new Player(80,80,327);
 window.addEventListener('keydown',(e)=>{
-    player.increment(e.code,0,-.5)
+    player.increment(e.code,10,0)
 })
 window.addEventListener('keyup',(e)=>{
-    player.increment(e.code,10,.5)
+    player.increment(e.code,0,.5)
 })
 
 function animate2(){
