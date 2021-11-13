@@ -3,9 +3,6 @@ function particleSystemHandler(){
     
     for(let i=0;i<particles.length;i++){
         particles[i].update();
-        if(particles.length > PARTICLE_LIMIT) {
-            particles.shift()
-        }
         if(particles[i].toRemove || particles[i].size <= 0){
             particles.splice(i,1);
             i--;
@@ -59,12 +56,14 @@ class Particle{
         this.dx= dx || Math.random()*5-2.5;
         this.dy= dy || Math.random()*5-2.5;
         this.color = Math.random()*30 + color
-        // this.gravity = formData.gravity ? (upwards ? -.2: .2):0;
         this.gravity = ()=>formData.gravity;
         this.decreaseFactor = ()=>formData.decrease
-        // this.color= Math.random()*360
+        this.age=0;
     }
     update(){
+        this.age++
+        //if old enough, delete particle
+        if(this.age >=200) return this.size=0
         this.x+=this.dx
         this.y+=this.dy
         this.dy+=this.gravity();
