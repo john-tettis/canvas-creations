@@ -5,6 +5,9 @@
     font-family: 'Source Sans Pro', sans-serif;
     letter-spacing:.15em;
 }
+body{
+    touch-action:none;
+}
 
 #canvas1{
     width:100%;
