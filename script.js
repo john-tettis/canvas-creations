@@ -61,9 +61,13 @@ class Particle{
         this.age=0;
     }
     update(){
-        this.age++
-        //if old enough, delete particle
-        if(this.age >=PARTICLE_LIMIT) return this.size=0
+       // increment age if too many particles\
+        this.age++;
+        if(particles.length >= formData.particleLimit/3){
+             //if old enough, delete particle
+            if(this.age >=formData.particleLimit) return this.size=0
+        }
+       
         this.x+=this.dx
         this.y+=this.dy
         this.dy+=this.gravity();

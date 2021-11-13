@@ -1,4 +1,4 @@
-let formData= {trails:false,gravity:.2, decrease:0};
+let formData= {trails:false,gravity:.2, decrease:0, particleLimit:100};
 
 const menu = document.getElementsByClassName('menu')[0]
 //form events

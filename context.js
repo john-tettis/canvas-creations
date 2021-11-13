@@ -10,4 +10,3 @@ let mouse = {
     y:null
 }
 
-const PARTICLE_LIMIT=100;
