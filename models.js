@@ -10,7 +10,7 @@ class ClearingAnimation{
         if(this.animate){
             this.size+=20
             if(this.size> canvas.width && this.size>canvas.height) {
-                particles.lenght=0;
+                particles.length=0;
                 return this.animate=false;
             }
             this.draw()
