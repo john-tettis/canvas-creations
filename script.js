@@ -23,6 +23,38 @@ canvas.addEventListener('mousemove',(e)=>{
     // }
     hue++;
 })
+canvas.addEventListener('touchstart',(e)=>{
+    e.preventDefault();
+    //if double touch, make mouse coordinates the mipoint of touches
+    if(e.touches.length===2){
+        let x = (e.touches[0].clientX + e.touches[1].clientX)/2
+        let y = (e.touches[0].clientY + e.touches[1].clientY)/2
+       mouse={x,y}
+        fireContext.start= {
+            x:mouse.x,
+            y:mouse.y
+    }
+    }
+})
+canvas.addEventListener('touchend',(e)=>{
+    e.preventDefault();
+    fireContext.end={x:mouse.x,y:mouse.y}
+})
+canvas.addEventListener('touchmove',(e)=>{
+    e.preventDefault();
+    let {touches}= e
+    //dont spawn any particles if double tap,
+    if(e.touches.length >=2) {
+        let x = (touches[0].clientX + touches[1].clientX)/2
+        let y = (touches[0].clientY + touches[1].clientY)/2
+       mouse={x,y}
+       return
+    }
+    mouse.x = touches[0].clientX
+    mouse.y= touches[0].clientY
+    
+    particles.push(new Particle(hue,false,mouse.x,mouse.y))
+})
 // canvas.addEventListener('click',()=>{
 //     console.log('click')
 //     particles.push(new ParticleSystem(50, 180, true))
@@ -59,9 +91,9 @@ class Firing{
         }
     }
     handleFire(){
-        let speed = -10;
         let dx = this.end.x-this.start.x;
         let dy = this.end.y-this.start.y;
+        let speed = Math.max(-18, .05 * -Math.sqrt(dx**2 + dy**2));
         let ratio = Math.abs(dy/dx);
         ratio = ratio  > 7 ? 7:ratio < -7? -7: ratio;
         console.log({dx,dy, ratio})
@@ -78,14 +110,25 @@ class Firing{
 let fireContext = new Firing()
 //add x,y values to fire context on mousedown
 
+/**
+ * 
+ * detect what device user is one, add mouse events if desktop.
+ * The mouse events get in the way of the touch interface.
+ * 
+ */
 canvas.addEventListener('mousedown',(e)=>{
     fireContext.start= {x:mouse.x,y:mouse.y}
     
 })
 canvas.addEventListener('mouseup',()=>{
+    console.log('UPUPUPU')
     fireContext.end = {x:mouse.x,y:mouse.y};
 
 })
+function is_touch_device() {
+    return !!('ontouchstart' in window);
+  }
+console.log(is_touch_device())
 class Particle{
     constructor(color=hue,upwards,x=mouse.x, y=mouse.y, dx, dy){
         this.size = Math.random()* 6 + 6
@@ -122,8 +165,8 @@ class ParticleSystem{
         // this.drawTrail();
         if(fd){
             for(let i=0;i<=quantity;i++){
-                fd.dx+=  (Math.random()*3 -1.5)
-                fd.dy+=  (Math.random()*3 -1.5)
+                fd.dx+=  (Math.random()*2 -1)
+                fd.dy+=  (Math.random()*2 -1)
                 this.particles.push(new Particle(hue-offset,upwards, fd.x,fd.y,fd.dx,fd.dy))
             }
 
