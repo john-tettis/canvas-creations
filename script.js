@@ -1,69 +1,11 @@
-const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-let particles=[];
-let hue=0;
-canvas.width=window.innerWidth;
-    canvas.height = window.innerHeight;
-
-let mouse = {
-    x:null,
-    y:null
-}
-window.addEventListener('resize',()=>{
-    canvas.width=window.innerWidth;
-    canvas.height = window.innerHeight;
-})
-canvas.addEventListener('mousemove',(e)=>{
-    mouse.x=e.x;
-    mouse.y=e.y;
-    // for(let i=0;i<10;i++){
-        
-    //     particles.push(new Particle())
-
-    // }
-   
-})
-canvas.addEventListener('touchstart',(e)=>{
-    e.preventDefault();
-    //if double touch, make mouse coordinates the mipoint of touches
-    if(e.touches.length===2){
-        let x = (e.touches[0].clientX + e.touches[1].clientX)/2
-        let y = (e.touches[0].clientY + e.touches[1].clientY)/2
-        mouse={x,y}
-        fireContext.start= mouse
-    }
-})
-canvas.addEventListener('touchend',(e)=>{
-    e.preventDefault();
-    console.log(e)
-    if(e.touches.length===1){
-        fireContext.end={x:mouse.x,y:mouse.y}
-    }
-})
-canvas.addEventListener('touchmove',(e)=>{
-    e.preventDefault();
-    let {touches}= e
-    //dont spawn any particles if double tap,
-    if(e.touches.length >=2) {
-        let x = (touches[0].clientX + touches[1].clientX)/2
-        let y = (touches[0].clientY + touches[1].clientY)/2
-       mouse={x,y}
-       return
-    }
-    mouse.x = touches[0].clientX
-    mouse.y= touches[0].clientY
-    
-    particles.push(new Particle(hue,false,mouse.x,mouse.y))
-})
-// canvas.addEventListener('click',()=>{
-//     console.log('click')
-//     particles.push(new ParticleSystem(50, 180, true))
-// })
-
 
 function particleSystemHandler(){
+    
     for(let i=0;i<particles.length;i++){
         particles[i].update();
+        if(particles.length > PARTICLE_LIMIT) {
+            particles.shift()
+        }
         if(particles[i].toRemove || particles[i].size <= 0){
             particles.splice(i,1);
             i--;
@@ -108,27 +50,7 @@ class Firing{
 }
 
 let fireContext = new Firing()
-//add x,y values to fire context on mousedown
 
-/**
- * 
- * detect what device user is one, add mouse events if desktop.
- * The mouse events get in the way of the touch interface.
- * 
- */
-canvas.addEventListener('mousedown',(e)=>{
-    fireContext.start= {x:mouse.x,y:mouse.y}
-    
-})
-canvas.addEventListener('mouseup',()=>{
-    console.log('UPUPUPU')
-    fireContext.end = {x:mouse.x,y:mouse.y};
-
-})
-function is_touch_device() {
-    return !!('ontouchstart' in window);
-  }
-console.log(is_touch_device())
 class Particle{
     constructor(color=hue,upwards,x=mouse.x, y=mouse.y, dx, dy){
         this.size = Math.random()* 6 + 6
@@ -137,14 +59,16 @@ class Particle{
         this.dx= dx || Math.random()*5-2.5;
         this.dy= dy || Math.random()*5-2.5;
         this.color = Math.random()*30 + color
-        this.gravity = upwards ? -.2: .2
+        // this.gravity = formData.gravity ? (upwards ? -.2: .2):0;
+        this.gravity = ()=>formData.gravity;
+        this.decreaseFactor = ()=>formData.decrease
         // this.color= Math.random()*360
     }
     update(){
         this.x+=this.dx
         this.y+=this.dy
-        this.dy+=this.gravity;
-        this.size-=.05;
+        this.dy+=this.gravity();
+        this.size-=this.decreaseFactor();
         if(this.y > canvas.height | this.y<0) this.dy = -this.dy*.5;
         if(this.x > canvas.width || this.x < 0) this.dx = -this.dx*.5;
         if(this.size>0)this.draw();
@@ -215,21 +139,48 @@ class ParticleSystem{
         }
     }
 }
+//navbar color update()
+let logo = document.getElementsByClassName('logo')[0]
+let settings = document.getElementsByClassName('settings')[0]
+
+const updateAppBar=()=>{
+    logo.style.color = `hsl(${hue}, 100%, 50%)`
+    settings.style.color = `hsl(${hue-180}, 100%, 50%)`
+}
 
 function animate2(){
     particleSystemHandler();
     window.requestAnimationFrame(animate)
 
 }
+//using closure to bind variable inside funciton to be changed
+let hoverColor =()=>null;
 function animate(){
+    //begin drawing
     ctx.beginPath()
     ctx.fillStyle='rgba(0,0,0,.03)';
-    ctx.rect(0,0,canvas.width,canvas.height)
-    ctx.fill()
+    
+    //handle animation depending on user settings
+    // console.log(formData)
+    if(formData.trails)ctx.rect(0,0,canvas.width,canvas.height);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fill();
     particleSystemHandler();
     fireContext.update()
+    //update hover item
     hue++;
+    //change colors in app bar
+    updateAppBar()
+    //efect any elements needing a color update
+    hoverColor();
+    //update clearing animation
+    clearingAnimator.update();
     window.requestAnimationFrame(animate)
 
 }
 animate();
+
+
+
+
+

@@ -1,15 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- <a target="_blank" href="https://icons8.com/icon/wTU9hvcTA5pM/settings">Settings</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
+    <nav class='appbar'>
+        <p class="logo">CanvasCreations</p>
+        <i class="fas fa-2x fa-sliders-h settings"></i>
+    </nav>
     <canvas id="canvas1"></canvas>
+    <i id='clear' class="fas fa-3x fa-eraser"></i>
+    <div class = 'menu'>
+        <form class='settings-form'>
+            <div>
+                <label for="trails">Trails:</label>
+                <input id="trails" name=trails type="checkbox">
+            </div>
+            <div>
+                <label for="gravity">Gravity:</label>
+                <input id='gravity'name="gravity"  value='.2' min='-.5' max='.5' step='.05'type="range">
+            </div>
+            <div>
+                <label for="decreases">Size Decrease:</label>
+                <input  id='decrease' value='0' min = '0' max='1' step='.05'type="range">
+            </div>
+            <!-- <div>
+                <label for=""></label>
+                <input type="text">
+            </div> -->
+        </form>
+    </div>
     
 </body>
-<script type='module'src="./script.js"></script>
+<script src="./context.js"></script>
+<script src="./form.js"></script>
+<script src="./models.js"></script>
+<script src="./script.js"></script>
+<script src="./eventListeners.js"></script>
 </html>
