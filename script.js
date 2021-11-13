@@ -63,7 +63,7 @@ class Particle{
     update(){
         this.age++
         //if old enough, delete particle
-        if(this.age >=200) return this.size=0
+        if(this.age >=PARTICLE_LIMIT) return this.size=0
         this.x+=this.dx
         this.y+=this.dy
         this.dy+=this.gravity();
