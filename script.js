@@ -21,7 +21,7 @@ canvas.addEventListener('mousemove',(e)=>{
     //     particles.push(new Particle())
 
     // }
-    hue++;
+   
 })
 canvas.addEventListener('touchstart',(e)=>{
     e.preventDefault();
@@ -29,16 +29,16 @@ canvas.addEventListener('touchstart',(e)=>{
     if(e.touches.length===2){
         let x = (e.touches[0].clientX + e.touches[1].clientX)/2
         let y = (e.touches[0].clientY + e.touches[1].clientY)/2
-       mouse={x,y}
-        fireContext.start= {
-            x:mouse.x,
-            y:mouse.y
-    }
+        mouse={x,y}
+        fireContext.start= mouse
     }
 })
 canvas.addEventListener('touchend',(e)=>{
     e.preventDefault();
-    fireContext.end={x:mouse.x,y:mouse.y}
+    console.log(e)
+    if(e.touches.length===1){
+        fireContext.end={x:mouse.x,y:mouse.y}
+    }
 })
 canvas.addEventListener('touchmove',(e)=>{
     e.preventDefault();
@@ -224,12 +224,12 @@ function animate2(){
 function animate(){
     ctx.beginPath()
     ctx.fillStyle='rgba(0,0,0,.03)';
-    ctx.clearRect(0,0,canvas.width,canvas.height)
+    ctx.rect(0,0,canvas.width,canvas.height)
     ctx.fill()
     particleSystemHandler();
     fireContext.update()
-    
-    window.requestAnimationFrame(animate2)
+    hue++;
+    window.requestAnimationFrame(animate)
 
 }
 animate();
