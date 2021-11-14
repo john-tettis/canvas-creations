@@ -39,8 +39,10 @@ class Firing{
         dx =speed*(dx > 0? 1:-1);
         dy = speed*ratio*(dy > 0? 1:-1);
         console.log({dx,dy, ratio})
-        let data={x:this.start.x,y:this.start.y, dx,dy}
-        particles.push(new ParticleSystem(50,0,false,data))
+        let data={x:this.start.x,y:this.start.y, dx,dy, bomb:true}
+        //check if we are shooting a notrmal shot or a bomb shot. bombs bounce before exploding.
+        
+        formData.bomb ? particles.push(new Bomb(data)):particles.push(new ParticleSystem(50,180,false,data))
         this.start = {};
         this.end = undefined;
     }
@@ -141,6 +143,7 @@ class ParticleSystem{
 
         }
     }
+   
 }
 //navbar color update()
 let logo = document.getElementsByClassName('logo')[0]
@@ -151,13 +154,86 @@ const updateAppBar=()=>{
     settings.style.color = `hsl(${hue-180}, 100%, 50%)`
 }
 
-function animate2(){
-    particleSystemHandler();
-    window.requestAnimationFrame(animate)
 
+
+//spawns particle in direction, explodes into particle bomb upon second impact
+class Bomb{
+    constructor(data){
+        this.x = data.x;
+        this.y = data.y;
+        this.dx=data.dx;
+        this.dy = data.dy;
+        this.size=20;
+        this.color = hue
+        this.gravity = ()=>formData.gravity;
+        this.decreaseFactor = ()=>formData.decrease
+        this.collisions=0;
+        this.timer=80;
+        this.age=0;
+        
+    }
+    update(){
+        //check if bomb has exploded for a few seconds
+        if(this.age >=formData.particleLimit) return this.size=0
+        this.x+=this.dx
+        this.y+=this.dy
+        this.dy+=this.gravity();
+        this.size-=this.decreaseFactor();
+        if(this.y >= canvas.height-this.size || this.y<=this.size) {
+            this.dy = -this.dy*.6;
+            this.y+=this.dy
+            this.collisions++
+        }
+        if(this.x >= canvas.width-this.size || this.x <= this.size){ 
+            this.dx = -this.dx*.6;
+            this.x+=this.dx
+            this.collisions++
+        }
+        if(this.collisions >=1){
+            this.timer--
+        }
+        if(this.timer<=0) this.explode();
+        
+        if(this.size>0)this.draw();
+    
+    }
+    draw(){
+        let brightness = Math.random()* (40 + this.collisions*30);
+        ctx.beginPath();
+        ctx.fillStyle=`hsl(${this.color},100%,${brightness}%)`;
+        ctx.arc(this.x,this.y, this.size, 0, Math.PI *2)
+        ctx.fill();
+    }
+    explode(){
+        // spawnBomb(this.x,this.y,180,this.color)
+        this.age++
+        particles.push(new ParticleSystem(10,hue-this.color,false,{x:this.x,y:this.y, dx:Math.random()*5-2.5, dy:Math.random()*5-2.5}))
+        this.size=.1;
+        this.collisions=0; 
+    }
 }
-//using closure to bind variable inside funciton to be changed
+//using closure to bind variable inside funciton to be changed throughout animation.
+const spawnBomb=(x,y, diff =Math.random()*360, color = hue-diff)=>{
+    let total = 500;
+    let temp = hoverColor;
+    hoverColor = ()=>{
+        temp();
+        if(total <=0) return hoverColor= ()=>null;
+        for(let i=0;i<4;i++){
+            total--;
+            let p = new Particle(color,false,x,y);
+            //tutrn grafity off for bomb particles;
+            p.gravity= ()=> 0;
+            //double its speed up
+            // p.dx*=2;
+            // p.dy*=2;
+            particles.push(p)
+
+        }
+    }
+}
 let hoverColor =()=>null;
+
 function animate(){
     //begin drawing
     ctx.beginPath()

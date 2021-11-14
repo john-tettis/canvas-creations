@@ -23,19 +23,35 @@
         <form class='settings-form'>
             <div>
                 <label for="trails">Trails:</label>
-                <input id="trails" name=trails type="checkbox">
+                <input id="trails" name='trails' type="checkbox"/>
+                
+            </div>
+            <div>
+                <label for="bomb">Particle Bombs</label>
+                <input id="bomb" name='bomb' type="checkbox"/>
+                
             </div>
             <div>
                 <label for="gravity">Gravity:</label>
-                <input id='gravity'name="gravity"  value='.2' min='-.5' max='.5' step='.05'type="range">
+                <input id='gravity'
+                name="gravity"  
+                value='.2' 
+                min='-.5' 
+                max='.5' 
+                step='.05'
+                type="range"
+                oninput="updateTextInput(this.value,'g-text');"/>
+                <p id='g-text' class='white'>.2</p>
             </div>
             <div>
                 <label for="decreases">Size Decrease:</label>
-                <input  id='decrease' value='0' min = '-1' max='1' step='.05'type="range">
+                <input  id='decrease' value='0' min = '-1' max='1' step='.05'type="range" oninput="updateTextInput(this.value,'sd-text');"/>
+                <p id='sd-text' class='white'>0</p>
             </div>
             <div>
                 <label for="particleLimit">Particle Limit</label>
-                <input name='particleLimit' id='particleLimit' min ='20' max ='200' value='100'type="range">
+                <input name='particleLimit' id='particleLimit' min ='20' max ='200' value='100'type="range" oninput="updateTextInput(this.value,'pl-text');"/>
+                <p id='pl-text' class='white'>100</p>
             </div>
         </form>
     </div>

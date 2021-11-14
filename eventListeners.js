@@ -46,7 +46,15 @@ canvas.addEventListener('touchmove',(e)=>{
 let click=false;
  canvas.addEventListener('mousedown',(e)=>{
      e.preventDefault()
-     if(e.which===1) click=true;
+     if(e.which===1) {
+         //activate bomb or start spawning for a drag event. depends on user input
+         if(formData.bomb){
+             console.log('bomb')
+             return spawnBomb(mouse.x,mouse.y)
+
+         }
+         click=true;
+        }
      if(e.which===3)return fireContext.start= {x:mouse.x,y:mouse.y};
     
 })
