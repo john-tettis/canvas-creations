@@ -166,7 +166,6 @@ class Bomb{
         this.size=20;
         this.color = hue
         this.gravity = ()=>formData.gravity;
-        this.decreaseFactor = ()=>formData.decrease
         this.collisions=0;
         this.timer=80;
         this.age=0;
@@ -178,7 +177,6 @@ class Bomb{
         this.x+=this.dx
         this.y+=this.dy
         this.dy+=this.gravity();
-        this.size-=this.decreaseFactor();
         if(this.y >= canvas.height-this.size || this.y<=this.size) {
             this.dy = -this.dy*.6;
             this.y+=this.dy
