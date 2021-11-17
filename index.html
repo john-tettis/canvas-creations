@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,21 +14,21 @@
 </head>
 <body>
     <nav class='appbar'>
-        <p class="logo">CanvasCreations</p>
+        <div class="appbar-container">
+            <a class="logo" href='./index.html'>CanvasCreations</a>
+            <a id='about'class="appbar-link" href='#'>About</a>
+        </div>
         <i class="fas fa-2x fa-sliders-h settings"></i>
     </nav>
     <canvas id="canvas1"></canvas>
+    <canvas id="canvas2"></canvas>
     <i id='clear' class="fas fa-3x fa-eraser"></i>
     <div class = 'menu'>
+        <!-- default settings menu -->
         <form class='settings-form'>
             <div>
                 <label for="trails">Trails:</label>
                 <input id="trails" name='trails' type="checkbox"/>
-                
-            </div>
-            <div>
-                <label for="bomb">Particle Bombs</label>
-                <input id="bomb" name='bomb' type="checkbox"/>
                 
             </div>
             <div>
@@ -41,19 +41,54 @@
                 step='.05'
                 type="range"
                 oninput="updateTextInput(this.value,'g-text');"/>
-                <p id='g-text' class='white'>.2</p>
+                <p id='g-text' class='range-display'>.2</p>
             </div>
             <div>
-                <label for="decreases">Size Decrease:</label>
-                <input  id='decrease' value='0' min = '-1' max='1' step='.05'type="range" oninput="updateTextInput(this.value,'sd-text');"/>
-                <p id='sd-text' class='white'>0</p>
+                <label for="decreases">Particle size decrement:</label>
+                <input  id='decrease' 
+                value='0' 
+                min = '-1' 
+                max='1' 
+                step='.05'
+                type="range" 
+                oninput="updateTextInput(this.value,'sd-text');"/>
+                <p id='sd-text' class='range-display'>0</p>
             </div>
             <div>
                 <label for="particleLimit">Particle Limit</label>
                 <input name='particleLimit' id='particleLimit' min ='20' max ='200' value='100'type="range" oninput="updateTextInput(this.value,'pl-text');"/>
-                <p id='pl-text' class='white'>100</p>
+                <p id='pl-text' class='range-display'>100</p>
+            </div>
+            <div >
+                <label for="bomb">Particle Bombs</label>
+                <input id="bomb" name='bomb' type="checkbox"/>
+            </div>
+            <div style='display:none'>
+                <label class='sub'for="bomb_intensity">Particle Bomb Intensity</label>
+                <input id="bomb_intensity" 
+                name='bomb_intensity' 
+                value='10' 
+                min = '1' 
+                max='15' 
+                step='1'
+                type="range" 
+                oninput="updateTextInput(this.value,'bi-text');"/>
+                
+                <p id='bi-text' class='range-display'>10</p>
             </div>
         </form>
+        <!-- about page container to be toggled on and off once in settings menu -->
+        <div class="about-container">
+            <h1 class='about'>About</h1>
+            <p class="about">
+                Canvas Creations is a little side project I , <a class='hue-link' target='_blank' href="https://www.linkedin.com/in/john-tettis/">John Tettis</a>, created in my free time.
+                I've built a particle system from scratch as well as a rudementary physics system all using vanilla javascript.
+            </p>
+            <p class='about'>
+                All of the customizable values means that there are tons of visual effects possible through this little sandbox-exploration.
+                You can see the code <a class='hue-link'target='_blank' href="https://github.com/john-tettis/canvas-creations">here</a>. Feel free to explore it and bring your own ideas to life!
+            </p>
+        </div>
     </div>
     
 </body>
