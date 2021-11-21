@@ -7,7 +7,7 @@ let formData= {
     bomb_intensity:20
 };
 //settings menu selection
-const menu = document.getElementsByClassName('menu')[0]
+const menu = document.getElementById('menu')
 //about link selection
 let about = document.getElementById('about')
 
@@ -17,7 +17,7 @@ menu.addEventListener('change',(e)=>{
     
     formData= {...formData,[id]:type==='checkbox' ? checked:Number(value)}
     
-    if(id==='bomb') e.target.parentElement.nextElementSibling.style.display= checked? 'flex':'none';
+    if(id==='bomb') e.target.parentElement.parentElement.nextElementSibling.style.display= checked? 'flex':'none';
     console.dir(e.target.parentElement)
 
 })

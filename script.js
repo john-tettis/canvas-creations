@@ -1,19 +1,28 @@
 
 
-//particle/particleSYstem handler. Runs each animation frame.
-function particleSystemHandler(){
-    
+/**
+ * handles the update of all elements in global particles variable. Runs each animation frame.
+ */
+function updateAllParticles(){
     for(let i=0;i<particles.length;i++){
         particles[i].update();
-        if(particles[i].toRemove || particles[i].size <= 0){
+        if(particles[i].size <= 0){
             particles.splice(i,1);
             i--;
         }
     }
 
 }
-//updates canvas elements according to user settings. Ran each animation frame
-function canvasUpdate(){
+/**
+ * clears the canvas according to user settings. Either clears entire frame, or draws semi-transparent rectangle across screen.
+ *  Ran each animation frame
+ **/
+function updateCanvas(){
+    //begin drawing
+    ctx.beginPath()
+    //set fillstyle to 
+    ctx.fillStyle='rgba(0,0,0,.03)';
+    
     //if formData.trails, draw opaque rectangle to slowly cover previous particle drawings, creating trail effect
     if(formData.trails)ctx.rect(0,0,canvas.width,canvas.height);
     //otherwise clear the entire canvas
@@ -26,21 +35,16 @@ function canvasUpdate(){
 }
 
 //this function is a reference to be assigned to a function used to update the hover color of an element. 
-//Realistically ant=ything ca=ould be assigned to hoverColor in order to add it to the update animation cycle.
+//Realistically anything could be assigned to hoverColor in order to add it to the update animation cycle.
 let hoverColor =()=>null;
 
 //animate function, recursively calls indefinetely
 function animate(){
-    //begin drawing
-    ctx.beginPath()
-    ctx.fillStyle='rgba(0,0,0,.03)';
-    
-    canvasUpdate();
-    particleSystemHandler();
+    updateCanvas();
+    updateAllParticles();
     fireContext.update()
     
-    //change colors in app bar
-    updateAppBar()
+    updateColoredElements()
     //efect any elements needing a color update
     hoverColor();
     //update clearing animation

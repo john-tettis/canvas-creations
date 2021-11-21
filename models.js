@@ -1,3 +1,7 @@
+
+/** clears entire canvas. Less useful upon particle limit addition
+ * 
+ **/
 class ClearingAnimation{
     constructor(x=canvas.width-80,y=canvas.height-80){
         this.x=x;
@@ -63,8 +67,8 @@ class Particle{
         this.dy+=this.gravity();
         this.size-=this.decreaseFactor();
         // if(this.size>20)this.decreaseFactor = ()=>-formData.decrease
-        if(this.y > canvas.height-this.size | this.y<this.size) this.dy = -this.dy*.5;
-        if(this.x > canvas.width-this.size || this.x < this.size) this.dx = -this.dx*.5;
+        if(this.y > canvas.height-this.size || this.y<this.size) this.dy = -this.dy*.5;
+        if(this.x > canvas.width-this.size || this.x <=collisionOffset + this.size) this.dx = -this.dx*.5;
         if(this.size>0)this.draw();
     }
     draw(){
@@ -79,7 +83,7 @@ class ParticleSystem{
     constructor(quantity, offset=0, upwards=false, fd){
         this.particles = [];
         this.origin ={x:mouse.x,y:mouse.y};
-        this.toRemove=false;
+        this.size=1;
         this.speed=-10;
         // this.drawTrail();
         //if particle system was created by firing context
@@ -101,6 +105,8 @@ class ParticleSystem{
     update(){
         let every = true;
         for(let i=0;i<this.particles.length;i++){
+            //this code will draw a line between all particles in a particel system, given they are close enough.
+            //O(n^2) means thisn is extremely performance heavy.
             // for(let j=i+1; i<this.particles.length;j++){
             //     let p1 = this.particles[i]
             //     let p2 = this.particles[j]
@@ -131,7 +137,7 @@ class ParticleSystem{
             // ctx.fillStyle=`black`;
             // ctx.arc(this.origin.x,this.origin.y, 110, 0, Math.PI *2)
             // ctx.fill();
-            this.toRemove=true;
+            this.size=0;
 
         }
     }
@@ -217,7 +223,7 @@ class Bomb{
             this.y+=this.dy
             this.collisions++
         }
-        if(this.x >= canvas.width-this.size || this.x <= this.size){ 
+        if(this.x >= canvas.width-this.size || this.x <= collisionOffset+this.size){ 
             this.dx = -this.dx*.6;
             this.x+=this.dx
             this.collisions++

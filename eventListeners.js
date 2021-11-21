@@ -1,3 +1,6 @@
+
+
+
 window.addEventListener('resize',()=>{
     canvas.width=window.innerWidth;
     canvas.height = window.innerHeight;
@@ -84,28 +87,46 @@ canvas.addEventListener('mousemove',(e)=>{
    
 //block right click menu 
   canvas.addEventListener('contextmenu', (e)=>e.preventDefault());
-let showMenu=false;
+
+//function fort converting rems to pixels for the canvas width update.
+function convertRemToPixels(rem) {    
+    return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+}
+
 //listen for settings icon press
-settings.addEventListener('click',(e)=>{
-    console.log(menu)
+let showMenu=false;
+settings.addEventListener('click',()=>{
+    console.log(!showMenu)
     showMenu = !showMenu;
-    menu.style.display= showMenu ? 'flex':'none';
+    let menuWidth = menu.offsetWidth;
+    console.log(menuWidth)
+    menu.style.left= showMenu ? '0':`-${menuWidth}px`;
     about.style.display= showMenu ? 'inline':'none';
-    
+    //update canvas for collision detection
+    if(showMenu){
+        collisionOffset=convertRemToPixels(menuWidth);
+    }
+    else{
+        collisionOffset=0;
+    }
 
 })
 
 
 //canvas clearing functionality
 const clear = document.getElementById('clear')
+//handle hover event of erase button
 clear.addEventListener('mouseenter',()=>{
-    hoverColor=()=>{
-        clear.style.color=`hsl(${hue},100%,50%)`
-    }
+    clear.classList.add('hue-link')
+    // hoverColor=()=>{
+    //     clear.style.color=`hsl(${hue},100%,50%)`
+    // }
 })
 clear.addEventListener('mouseleave',()=>{
     clear.style.color=`white`
-    hoverColor=()=>null;
+    clear.classList.remove('hue-link')
+
+    // hoverColor=()=>null;
 
 })
 const handleClear=()=>{
@@ -118,6 +139,7 @@ clear.addEventListener('click',handleClear)
 let aboutContent = document.getElementsByClassName('about-container')[0];
 let settingsForm = document.getElementsByClassName('settings-form')[0]
 let showAbout=false;
+//toggle about menu on or off upon click of 'about' link
 about.addEventListener('click',(e)=>{
     e.preventDefault()
     showAbout=!showAbout;
