@@ -15,9 +15,11 @@ class ClearingAnimation{
             this.size+=20
             if(this.size> canvas.width && this.size>canvas.height) {
                 particles.length=0;
-                
+                ctx2.beginPath()
+                ctx2.clearRect(0,0,canvas.width,canvas.height);
+                ctx2.fill()
             }
-            if(this.size> canvas.width+10 && this.size>canvas.height+10) {
+            if(this.size> canvas.width+30 && this.size>canvas.height+30) {
                 return this.animate=false;
                 
             }
@@ -55,7 +57,7 @@ class Particle{
     //retreive friction from formdata
     friction=()=>formData.friction
     //retreive growth variable from form
-    growthFactor = ()=>-formData.growth;
+    growthFactor = ()=>formData.growth;
     //retreive gravity from form
     gravity = ()=>formData.gravity;
     //update function cjhanges position, size and acceleration of particle. runs each animation frame
@@ -145,11 +147,16 @@ class ParticleSystem{
     }
     update(){
         let every = true;
+        let increment=0;
+        let count=particles.length-formData.particleLimit
+        if(count>0){
+            increment=1;
+        }
         for(let i=0;i<this.particles.length;i++){
             //this code will draw a line between all particles in a particel system, given they are close enough.
             //O(n^2) means thisn is extremely performance heavy.
             // for(let j=i+1; i<this.particles.length;j++){
-            //     let p1 = this.particles[i]
+                let particle = this.particles[i]
             //     let p2 = this.particles[j]
             //     let dx = p1.x-p2.x;
             //     let dy = p1.y-p2.y
@@ -162,6 +169,14 @@ class ParticleSystem{
             //         ctx.stroke();
             //     }
             // }
+
+        //only for individual particles
+        //duplicate code. needs refactored.
+        particle.age+=increment;
+        if(particle.age >=formData.particleLimit/2 && count>0) {
+            particle.growthFactor= ()=> -.1;
+            count--;
+        }
             if(this.particles[i].size>0){
                 every=false;
             }
@@ -268,6 +283,21 @@ class Bomb{
             this.dx = -this.dx*.6;
             this.x+=this.dx
             this.collisions++
+        }
+        if(this.x <collisionOffset + this.size){
+            if(this.menuCollision){
+                this.x+=10;
+                this.dx=Math.min(this.dx+2,15)
+                if(this.x-this.size > collisionOffset) this.menuCollision=false;
+            }
+            else{
+                this.menuCollision=true;
+                const distance = -(this.x-this.size)+collisionOffset;
+                this.x+=distance;
+                this.dx=-this.dx*.6;
+            }
+            
+                
         }
         // if the bomb has collided once or more, decrement timer
         if(this.collisions >=1){

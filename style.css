@@ -131,7 +131,7 @@ hr{
 
 }
 input{
-    width:60%;
+    min-width:55%;
     margin:.5rem;
 }
 /* displays range value through js code */
@@ -149,7 +149,7 @@ input[type='checkbox']{
     padding:1rem;
 }
 label{
-    min-width:20%;
+    min-width:30%;
     margin:.5rem;
 }
 
@@ -208,7 +208,7 @@ a,label,input{
 * https://dev.to/dcodeyt/creating-a-css-only-toggle-switch-5cg3
  */
 .toggle {
-    margin-left:4rem;
+    flex:1;
     --width: 40px;
     --height: calc(var(--width) / 2);
     --border-radius: calc(var(--height) / 2);
@@ -220,12 +220,14 @@ a,label,input{
     display: none;
 }
 .toggle__fill {
+    margin-left:auto;
+    margin-right:1rem;
     position: relative;
     width: var(--width);
     height: var(--height);
     border-radius: var(--border-radius);
     background: #dddddd;
-    /* transition: background 0.2s; */
+    transition: background-color 0.3s;
 }
 .toggle__fill::after {
     content: "";

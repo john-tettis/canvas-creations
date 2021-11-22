@@ -2,12 +2,12 @@
 let showMenu=false;
 /**
  * handles the update of all elements in global particles variable. Runs each animation frame.
- * updates collision coordinates for particle system
+ * updates collision coordinates for pparticles, bombs, particle systems
  */
 function updateAllParticles(){
     //set increment based on particle limit
     let increment=0;
-    let count=particles.length-formData.particleLimit
+    let count=particles.length-formData.particleLimit/2
     if(count>0){
         increment=1;
     }
@@ -16,16 +16,19 @@ function updateAllParticles(){
     for(let i=0;i<particles.length;i++){
         const particle = particles[i]
         particle.update();
+        if(particle.size <= 0){
+            particles.splice(i,1);
+            i--;
+            continue
+        }
+        //only for individual particles
+        if(!(particle instanceof Particle))continue
         particle.age+=increment;
         if(particle.age >=formData.particleLimit/2 && count>0) {
             particle.growthFactor= ()=> -.1;
             count--;
         }
-        else particle.growthFactor=()=>formData.growth;
-        if(particle.size <= 0){
-            particles.splice(i,1);
-            i--;
-        }
+       
     }
 
 }
