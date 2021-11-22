@@ -30,12 +30,18 @@
         <!-- default settings menu -->
         <form class='settings-form'>
             
-            
-            
             <div>
                 <label for="trails">Trails</label>
                 <label class="toggle" for="trails">
                     <input class="toggle__input"id="trails" name='trails' type="checkbox">
+                    <div class="toggle__fill"></div>
+                </label>
+                
+            </div>
+            <div>
+                <label for="complementary">Complementary</label>
+                <label class="toggle" for="complementary">
+                    <input class="toggle__input"id="complementary" name='complementary' type="checkbox">
                     <div class="toggle__fill"></div>
                 </label>
                 
@@ -61,6 +67,22 @@
                 <p id='bi-text' class='range-display'>10</p>
             </div>
             <div>
+                <label for="growth">Radial Growth</label>
+                <input  id='growth' 
+                value='0' 
+                min = '-1' 
+                max='1' 
+                step='.05'
+                type="range" 
+                oninput="updateTextInput(this.value,'rg-text');"/>
+                <p id='rg-text' class='range-display'>0</p>
+            </div>
+            <div>
+                <label for="particleLimit">Particle Limit</label>
+                <input name='particleLimit' id='particleLimit' min ='20' max ='200' value='100'type="range" oninput="updateTextInput(this.value,'pl-text');"/>
+                <p id='pl-text' class='range-display'>100</p>
+            </div>
+            <div>
                 <label for="gravity">Gravity</label>
                 <input id='gravity'
                 name="gravity"  
@@ -73,20 +95,16 @@
                 <p id='g-text' class='range-display'>.2</p>
             </div>
             <div>
-                <label for="decreases">Size decrement</label>
-                <input  id='decrease' 
+                <label for="friction">Friction</label>
+                <input id='friction'
+                name="friction"  
                 value='0' 
-                min = '-1' 
-                max='1' 
-                step='.05'
-                type="range" 
-                oninput="updateTextInput(this.value,'sd-text');"/>
-                <p id='sd-text' class='range-display'>0</p>
-            </div>
-            <div>
-                <label for="particleLimit">Particle Limit</label>
-                <input name='particleLimit' id='particleLimit' min ='20' max ='200' value='100'type="range" oninput="updateTextInput(this.value,'pl-text');"/>
-                <p id='pl-text' class='range-display'>100</p>
+                min='-.01' 
+                max='.01' 
+                step='.001'
+                type="range"
+                oninput="updateTextInput(this.value,'f-text');"/>
+                <p id='f-text' class='range-display'>0</p>
             </div>
             
         </form>

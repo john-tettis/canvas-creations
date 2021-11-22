@@ -27,7 +27,6 @@ class ClearingAnimation{
         
     }
     draw(){
-        console.log('drawing')
         ctx.beginPath();
         ctx.fillStyle=`hsl(${hue},100%,50%)`
         ctx.arc(this.x,this.y,this.size,0,Math.PI*2)
@@ -43,43 +42,43 @@ let clearingAnimator = new ClearingAnimation()
 //particle class -> tracks a single particle and its location and speed.
 class Particle{
     constructor(color=hue,upwards,x=mouse.x, y=mouse.y, dx, dy){
+        const offset = (Math.random() > .5 ? 180:0);
         this.size = Math.random()* 6 + 6
         this.x = x;
         this.y=y;
         this.dx= dx || Math.random()*5-2.5;
         this.dy= dy || Math.random()*5-2.5;
-        this.color = Math.random()*30 + color
-        this.gravity = ()=>formData.gravity;
-        this.decreaseFactor = ()=>formData.decrease
+        this.color = (Math.random()*30 + color) + (formData.complementary ? offset:0);
         this.age=0;
         this.menuCollision=false;
-        this.friction = .016;
     }
+    //retreive friction from formdata
+    friction=()=>formData.friction
+    //retreive growth variable from form
+    growthFactor = ()=>-formData.growth;
+    //retreive gravity from form
+    gravity = ()=>formData.gravity;
+    //update function cjhanges position, size and acceleration of particle. runs each animation frame
     update(){
-       // increment age if too many particles\
-        this.age++;
-        //if half particel limit has been acheived
-        if(particles.length >= formData.particleLimit/2){
-             //if old enough, delete particle
-            if(this.age >=formData.particleLimit) return this.size=0
-        }
-       
         this.x+=this.dx
         this.y+=this.dy
         this.dy+=this.gravity();
-        this.size-=this.decreaseFactor();
-        // if(this.size>20)this.decreaseFactor = ()=>-formData.decrease
-
-
+        this.size+=this.growthFactor();
+        // if(this.size>20)this.decreaseFactor = ()=>formData.growth
         //friction handling. bring dx/dy to zero;
-        this.dx+=this.dx<0 ? this.friction: this.dx > 0 ? -this.friction:0;
-        this.dy+=this.dy<0 ? this.friction: this.dy > 0 ? -this.friction:0;
+        this.dx+=this.dx<0 ? this.friction(): this.dx > 0 ? -this.friction():0;
+        this.dy+=this.dy<0 ? this.friction(): this.dy > 0 ? -this.friction():0;
 
+        //collision detection
 
         if(this.y > canvas.height-this.size){
+            //calculate distance that particle has left the screen
             const bottom = this.y + this.size;
             const distance = bottom-canvas.height;
-            
+            //if the particle has left more .05 pixels, move it back towards the screen. 
+            //keeps particles that move to far off the screen in between frames from becoming stuck.
+            //this.dy would constantly flip because the particle was outside the bounds of the screen
+            //but  could not move back on the screen before the next frame.
             if(distance<-.05)this.y-=distance
             this.dy = -this.dy*.6;
             }
@@ -100,6 +99,7 @@ class Particle{
             if(this.menuCollision){
                 this.x+=10;
                 this.dx=Math.min(this.dx+2,15)
+                if(this.x-this.size > collisionOffset) this.menuCollision=false;
             }
             else{
                 this.menuCollision=true;
