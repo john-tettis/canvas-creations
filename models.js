@@ -52,6 +52,8 @@ class Particle{
         this.gravity = ()=>formData.gravity;
         this.decreaseFactor = ()=>formData.decrease
         this.age=0;
+        this.menuCollision=false;
+        this.friction = .016;
     }
     update(){
        // increment age if too many particles\
@@ -67,8 +69,47 @@ class Particle{
         this.dy+=this.gravity();
         this.size-=this.decreaseFactor();
         // if(this.size>20)this.decreaseFactor = ()=>-formData.decrease
-        if(this.y > canvas.height-this.size || this.y<this.size) this.dy = -this.dy*.5;
-        if(this.x > canvas.width-this.size || this.x <=collisionOffset + this.size) this.dx = -this.dx*.5;
+
+
+        //friction handling. bring dx/dy to zero;
+        this.dx+=this.dx<0 ? this.friction: this.dx > 0 ? -this.friction:0;
+        this.dy+=this.dy<0 ? this.friction: this.dy > 0 ? -this.friction:0;
+
+
+        if(this.y > canvas.height-this.size){
+            const bottom = this.y + this.size;
+            const distance = bottom-canvas.height;
+            
+            if(distance<-.05)this.y-=distance
+            this.dy = -this.dy*.6;
+            }
+        if(this.y<this.size){
+            const distance= -(this.y - this.size);
+            if(distance>.05)this.y+=distance
+            this.dy = -this.dy*.6;
+
+        }
+        if(this.x > canvas.width-this.size) {
+            this.menuCollision=false;
+            const right = this.x + this.size;
+            const distance = right-canvas.width
+            this.x-=distance;
+            this.dx= -this.dx*.6;
+        }
+        if(this.x <collisionOffset + this.size){
+            if(this.menuCollision){
+                this.x+=10;
+                this.dx=Math.min(this.dx+2,15)
+            }
+            else{
+                this.menuCollision=true;
+                const distance = -(this.x-this.size)+collisionOffset;
+                this.x+=distance;
+                this.dx=-this.dx*.6;
+            }
+            
+                
+        }
         if(this.size>0)this.draw();
     }
     draw(){

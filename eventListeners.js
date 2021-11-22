@@ -92,25 +92,22 @@ canvas.addEventListener('mousemove',(e)=>{
 function convertRemToPixels(rem) {    
     return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }
-
-//listen for settings icon press
-let showMenu=false;
-settings.addEventListener('click',()=>{
-    console.log(!showMenu)
+/**
+ * update menu on settings button press.
+ * update global showMenu variable. 
+ * updates collision coordinates for particle system
+ */
+function updateMenu(){
     showMenu = !showMenu;
     let menuWidth = menu.offsetWidth;
-    console.log(menuWidth)
     menu.style.left= showMenu ? '0':`-${menuWidth}px`;
     about.style.display= showMenu ? 'inline':'none';
-    //update canvas for collision detection
-    if(showMenu){
-        collisionOffset=convertRemToPixels(menuWidth);
-    }
-    else{
-        collisionOffset=0;
-    }
+    console.log({collisionOffset,menuWidth})
+    //increment or clear collision offset based off showMenu. cap at menu width. creates an sliding collision barrier
+    collisionOffset = Math.min(showMenu ? collisionOffset+4:0,menuWidth)
+}
 
-})
+settings.addEventListener('click',updateMenu)
 
 
 //canvas clearing functionality
