@@ -11,8 +11,13 @@ function updateAllParticles(){
     if(count>0){
         increment=1;
     }
-    //increment or clear collision offset based off showMenu. cap at menu width. creates an sliding collision barrier
-    collisionOffset = Math.min(showMenu ? collisionOffset+20:0,menu.offsetWidth)
+    
+     //decide whther to update collision barrier based on screen width and menu visibility
+    const updateCollisionBarrier= showMenu&&window.innerWidth<776
+    
+    //increment or clear collision offset based off updateCollisionBarrier. cap at menu width. creates a sliding collision barrier
+    collisionOffset = Math.min(updateCollisionBarrier ? collisionOffset+20:0,menu.offsetWidth)
+    
     for(let i=0;i<particles.length;i++){
         const particle = particles[i]
         particle.update();
