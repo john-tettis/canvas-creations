@@ -17,7 +17,7 @@ A  canvas-based physics exploration.Animation and physics done in JS.
 ## Deployment
  - This site is deployed to github pages [here](https://john-tettis.github.io/canvas-creations/)
  
-##Team
+## Team
   Look at me! I am the captain now...
   
   [John tettis](https://www.linkedin.com/in/john-tettis/) is the solo contributor of this project. He invites you to contribute!
